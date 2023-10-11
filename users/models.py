@@ -1,3 +1,10 @@
 from django.db import models
 
-# Create your models here.
+class User(models.Model):
+    name: models.CharField(max_length=50)
+    lastname: models.CharField(max_length=50)
+    email: models.EmailField(unique=True)
+    phone: models.CharField(max_length=11)
+    address: models.CharField(max_length=255)
+    cpf: models.CharField(max_length=11)
+    books: models.ManyToManyField("Book")

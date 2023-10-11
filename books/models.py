@@ -20,6 +20,7 @@ class Book(models.Model):
     keywords: models.TextField()
     book_style: models.CharField(choices=BOOK_STYLE_CHOICES)
     price: models.FloatField()
+    user: models.ManyToManyField("User")
  
     def __str__(self):
         return self.name
