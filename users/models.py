@@ -7,4 +7,3 @@ class User(models.Model):
     phone: models.CharField(max_length=11)
     address: models.CharField(max_length=255)
     cpf: models.CharField(max_length=11)
-    books: models.ManyToManyField("Book")

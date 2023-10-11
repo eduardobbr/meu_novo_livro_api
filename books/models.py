@@ -20,7 +20,7 @@ class Book(models.Model):
     keywords: models.TextField()
     book_style: models.CharField(choices=BOOK_STYLE_CHOICES)
     price: models.FloatField()
-    user: models.ManyToManyField("User")
+    user: models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="books")
  
     def __str__(self):
         return self.name
