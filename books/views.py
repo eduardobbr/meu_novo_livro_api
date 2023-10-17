@@ -1,42 +1,32 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from books.models import Book
-from django.forms.models import model_to_dict
+from .serializers import BookSerializer
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
 
 class BookView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({'book': Book.objects.all()})
+    serializer_class = BookSerializer
 
-    def post(self, request, *args, **kwargs):
-        return Response({'book': 'post'})
+    def get(self, request):
+        books = Book.objects.all()
+        return Response(books, 200)
     
-    
-class OneBookView(APIView):
-    def get(self, request, book_id, *args, **kwargs):
-        try:
-            book = Book.objects.get(pk=book_id)
-        except Book.DoesNotExist:
-            return Response({'error': 'Livro não encontrado'}, status=404)
+    def post(self, request):
+        data = request.data
+        Book.objects.create(name=data['name'], content=data['content'],
+                            synopsis=data['synopsis'], value=data['value'],
+                            production=data['production'], cover=data['cover'],
+                            title=data['title'], subtitle=data['subtitle'],
+                            author=data['author'], isbn=data['isbn'],
+                            public_target=data['public_target'],
+                            keywords=data['keywords'],
+                            book_style=data['book_style'], price=data['price'],
+                            user=data['user']
+                            )
+        return Response(data, 201)
         
-        book_dict = model_to_dict(book)
-
-        return Response(book_dict)
-    
-    def patch(self, request, book_id, *args, **kwargs):
-        try:
-            book = Book.objects.get(pk=book_id)
-        except Book.DoesNotExist:
-            return Response({'error': 'Livro não encontrado'}, status=404)
-        
-        book_dict = model_to_dict(book)
-
-        return Response(book_dict)
-    
-    def delete(self, request, book_id, *args, **kwargs):
-        try:
-            book = Book.objects.get(pk=book_id)
-        except Book.DoesNotExist:
-            return Response({'error': 'Livro não encontrado'}, status=404)
-        
-        book.delete()
-        return Response({'success': True}, status=204)
+class CreateBookView(generics.CreateAPIView):
+    query_set= Book.objects.all()
+    permission_classes=(AllowAny,)
+    serializer_class=BookSerializer
