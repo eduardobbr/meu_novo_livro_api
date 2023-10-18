@@ -4,17 +4,19 @@ from books.models import Book
 from .serializers import BookSerializer
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+from users.models import User
 
 class BookView(APIView):
     serializer_class = BookSerializer
 
     def get(self, request):
         books = Book.objects.all()
-        return Response(books, 200)
+        book_serializer = BookSerializer(books, many=True)
+        return Response(book_serializer.data, 200)
     
     def post(self, request):
         data = request.data
-        Book.objects.create(name=data['name'], content=data['content'],
+        new_book = Book.objects.create(name=data['name'], content=data['content'],
                             synopsis=data['synopsis'], value=data['value'],
                             production=data['production'], cover=data['cover'],
                             title=data['title'], subtitle=data['subtitle'],
@@ -22,8 +24,9 @@ class BookView(APIView):
                             public_target=data['public_target'],
                             keywords=data['keywords'],
                             book_style=data['book_style'], price=data['price'],
-                            user=data['user']
+                            user=User.objects.get(id=data['user'])
                             )
+        new_book.save()
         return Response(data, 201)
         
 class CreateBookView(generics.CreateAPIView):
