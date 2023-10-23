@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+
 class BookSerializer(serializers.Serializer):
     name = serializers.CharField()
     content = serializers.CharField()
@@ -14,5 +15,4 @@ class BookSerializer(serializers.Serializer):
     public_target = serializers.IntegerField()
     keywords = serializers.CharField()
     book_style = serializers.CharField()
-    price = serializers.FloatField()   
- 
+    price = serializers.FloatField()
