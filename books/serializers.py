@@ -23,4 +23,4 @@ class BookSerializerGetAll(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ('name', 'synopsis', 'cover', 'title', 'subtitle',
-                  'author', 'keywords', 'public_target', 'price')
+                  'author', 'keywords', 'public_target', 'price', 'user')
