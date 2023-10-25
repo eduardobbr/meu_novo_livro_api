@@ -19,8 +19,15 @@ class BookSerializer(serializers.Serializer):
     price = serializers.FloatField()
 
 
-class BookSerializerGetAll(serializers.ModelSerializer):
+class GetAllBooksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ('name', 'synopsis', 'cover', 'title', 'subtitle',
-                  'author', 'keywords', 'public_target', 'price', 'user')
+        fields = ('id', 'name', 'synopsis', 'cover', 'title', 'subtitle',
+                  'author', 'keywords', 'public_target', 'price', 'production',
+                  'user')
+
+
+class GetOneBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('__all__')
