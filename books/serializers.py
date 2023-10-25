@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import Book
 
 
 class BookSerializer(serializers.Serializer):
@@ -16,3 +17,10 @@ class BookSerializer(serializers.Serializer):
     keywords = serializers.CharField()
     book_style = serializers.CharField()
     price = serializers.FloatField()
+
+
+class BookSerializerGetAll(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('name', 'synopsis', 'cover', 'title', 'subtitle',
+                  'author', 'keywords', 'public_target', 'price')
