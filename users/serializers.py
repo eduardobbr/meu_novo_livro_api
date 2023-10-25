@@ -46,8 +46,23 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class GetUsersSerializer(serializers.Serializer):
+class GetUsersSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    username = serializers.CharField()
     email = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email')
+
+
+class PatchUsersSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'cpf')
