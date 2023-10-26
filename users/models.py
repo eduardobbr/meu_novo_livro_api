@@ -6,3 +6,6 @@ class User(AbstractUser):
     phone = models.CharField(max_length=11)
     address = models.CharField(max_length=255)
     cpf = models.CharField(max_length=11)
+
+    def __str__(self):
+        return self.id

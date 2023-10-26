@@ -1,9 +1,11 @@
 from django.db import models
 
 
+def upload_page_name(self, filename):
+    return f'books/{self.name}_{self.author}/cover/{filename}'
+
+
 class Book(models.Model):
-    def upload_page_name(self, filename):
-        return f'books/{self.name}_{self.author}/{filename}'
     BOOK_STYLE_CHOICES = (('M', 'modern'), ('C', 'classic'))
 
     name = models.CharField(max_length=50)
@@ -11,7 +13,8 @@ class Book(models.Model):
     synopsis = models.TextField()
     value = models.FloatField()
     production = models.BooleanField(default=True)
-    cover = models.TextField()
+    cover = models.ImageField(
+        upload_to=upload_page_name, blank=True, null=True)
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=50)
     author = models.CharField(max_length=50)

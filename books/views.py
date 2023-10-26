@@ -25,12 +25,14 @@ class CreateBookView(generics.CreateAPIView):
 
     def post(self, request):
         data = request.data
+        cover = request.POST.get('cover', False)
+        data['user'] = request.user.id
         new_book = Book.objects.create(name=data['name'],
                                        content=data['content'],
                                        synopsis=data['synopsis'],
                                        value=data['value'],
                                        production=data['production'],
-                                       cover=data['cover'],
+                                       cover=cover,
                                        title=data['title'],
                                        subtitle=data['subtitle'],
                                        author=data['author'],
@@ -41,8 +43,11 @@ class CreateBookView(generics.CreateAPIView):
                                        price=data['price'],
                                        user=request.user
                                        )
-        new_book.save()
-        return Response(data, 201)
+        serializer_book = BookSerializer(new_book, data)
+        if serializer_book.is_valid():
+            serializer_book.save()
+            return Response(serializer_book.data, 201)
+        return Response(serializer_book.errors, 400)
 
 
 class OneBookAuthView(generics.CreateAPIView):
