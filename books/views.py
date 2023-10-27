@@ -5,6 +5,10 @@ from books.models import Book
 from .serializers import BookSerializer, GetAllBooksSerializer
 from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+import os.path
 
 
 class BookView(APIView):
@@ -70,3 +74,34 @@ class OneBookAuthView(generics.CreateAPIView):
             book_serializer.save()
             return Response(book_serializer.data, 200)
         return Response(book_serializer.errors, 400)
+
+
+class ConvertDownloadBookView(generics.CreateAPIView):
+    queryset = Book.objects.all()
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+    serializer_class = GetOneBookSerializer
+
+    def get_object(self, pk, request):
+        book = Book.objects.get(pk=pk)
+        self.check_object_permissions(request, book)
+        return book
+# tentar colocar a pasta de medias dentro de books
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs['id']
+        book = self.get_object(id, request)
+        book_serializer = GetOneBookSerializer(book)
+        p = canvas.Canvas(book_serializer.data['name'],
+                          pagesize=(1497.6, 2397.6), )
+        cover_path = book_serializer.data['cover']
+
+        fn = os.open(cover_path, os.O_RDONLY)
+
+        p.drawImage(fn, 0, 0, width=100, height=100)
+
+        p.drawString(100, 100,  book_serializer.data['content'])
+        p.showPage()
+        p.save()
+
+        return FileResponse(p, as_attachment=True,
+                            filename=f'{book_serializer.data['name']}.pdf')
