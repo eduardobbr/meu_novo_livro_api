@@ -14,6 +14,13 @@ class BookView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        user = request.query_params.get('user')
+
+        if (user):
+            books = Book.objects.filter(user=user)
+            book_serializer = GetAllBooksSerializer(books, many=True)
+            return Response(book_serializer.data, 200)
+
         books = Book.objects.all()
         book_serializer = GetAllBooksSerializer(books, many=True)
         return Response(book_serializer.data, 200)
