@@ -35,6 +35,8 @@ class CreateBookView(generics.CreateAPIView):
         data = request.data
         cover = request.POST.get('cover', False)
         data['user'] = request.user.id
+        data['value'] = 0
+        data['price'] = 0
         new_book = Book.objects.create(name=data['name'],
                                        content=data['content'],
                                        synopsis=data['synopsis'],
