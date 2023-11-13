@@ -81,6 +81,16 @@ class OneBookAuthView(generics.CreateAPIView):
             return Response(book_serializer.data, 200)
         return Response(book_serializer.errors, 400)
 
+    def get(self, request, *args, **kwargs):
+        id = kwargs['id']
+        book = self.get_object(id, request)
+        book_serializer = GetOneBookSerializer(book, data=request.data,
+                                               partial=True)
+
+        if (book_serializer.is_valid()):
+            return Response(book_serializer.data, 200)
+        return Response(book_serializer.errors, 400)
+
 
 class ConvertDownloadBookView(generics.CreateAPIView):
     queryset = Book.objects.all()
