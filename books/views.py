@@ -6,6 +6,10 @@ from .serializers import BookSerializer, GetAllBooksSerializer
 from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
 from weasyprint import HTML, CSS
+import tempfile
+import base64
+from PIL import Image
+from io import BytesIO
 
 
 class BookView(APIView):
@@ -33,7 +37,13 @@ class CreateBookView(generics.CreateAPIView):
 
     def post(self, request):
         data = request.data
-        cover = request.POST.get('cover', False)
+
+        cover = tempfile.NamedTemporaryFile(mode='wb', delete_on_close=True)
+        cover_file = data['cover'].decode('base64')
+        cover.open()
+        cover.write(cover, cover_file)
+        print('cover')
+
         data['user'] = request.user.id
         data['value'] = 0
         data['price'] = 0
@@ -56,7 +66,9 @@ class CreateBookView(generics.CreateAPIView):
         serializer_book = BookSerializer(new_book, data)
         if serializer_book.is_valid():
             serializer_book.save()
+            cover.close()
             return Response(serializer_book.data, 201)
+        cover.close()
         return Response(serializer_book.errors, 400)
 
 
@@ -73,7 +85,29 @@ class OneBookAuthView(generics.CreateAPIView):
     def patch(self, request, *args, **kwargs):
         id = kwargs['id']
         book = self.get_object(id, request)
-        book_serializer = GetOneBookSerializer(book, data=request.data,
+        data = request.data
+        b64str = data['cover'].replace('data:image/jpeg;base64', '')
+        cover_file = base64.b64decode(b64str)
+        img_save = BytesIO(cover_file)
+        test = Image.open(img_save, 'r', formats=['jpeg'])
+        test2 = test.load()
+
+        data_set = {
+            'content': data['content'],
+            'synopsis': data['synopsis'],
+            'production': data['production'],
+            'cover': test2,
+            'title': data['title'],
+            'subtitle': data['subtitle'],
+            'author': data['author'],
+            'isbn': data['isbn'],
+            'public_target': data['public_target'],
+            'keywords': data['keywords'],
+            'book_style': data['book_style'],
+            'user': request.user.id
+        }
+
+        book_serializer = GetOneBookSerializer(book, data=data_set,
                                                partial=True)
 
         if (book_serializer.is_valid()):
