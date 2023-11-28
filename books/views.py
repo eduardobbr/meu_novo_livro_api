@@ -37,13 +37,8 @@ class CreateBookView(generics.CreateAPIView):
 
     def post(self, request):
         data = request.data
-
-        cover = tempfile.NamedTemporaryFile(mode='wb', delete_on_close=True)
-        cover_file = data['cover'].decode('base64')
-        cover.open()
-        cover.write(cover, cover_file)
-        print('cover')
-
+        print(data)
+        cover = request.POST.get('cover', False)
         data['user'] = request.user.id
         data['value'] = 0
         data['price'] = 0
@@ -51,7 +46,7 @@ class CreateBookView(generics.CreateAPIView):
                                        content=data['content'],
                                        synopsis=data['synopsis'],
                                        value=data['value'],
-                                       production=data['production'],
+                                       production=True,
                                        cover=cover,
                                        title=data['title'],
                                        subtitle=data['subtitle'],
@@ -66,9 +61,9 @@ class CreateBookView(generics.CreateAPIView):
         serializer_book = BookSerializer(new_book, data)
         if serializer_book.is_valid():
             serializer_book.save()
-            cover.close()
+
             return Response(serializer_book.data, 201)
-        cover.close()
+
         return Response(serializer_book.errors, 400)
 
 
@@ -86,17 +81,11 @@ class OneBookAuthView(generics.CreateAPIView):
         id = kwargs['id']
         book = self.get_object(id, request)
         data = request.data
-        b64str = data['cover'].replace('data:image/jpeg;base64', '')
-        cover_file = base64.b64decode(b64str)
-        img_save = BytesIO(cover_file)
-        test = Image.open(img_save, 'r', formats=['jpeg'])
-        test2 = test.load()
 
         data_set = {
             'content': data['content'],
             'synopsis': data['synopsis'],
             'production': data['production'],
-            'cover': test2,
             'title': data['title'],
             'subtitle': data['subtitle'],
             'author': data['author'],
@@ -104,6 +93,7 @@ class OneBookAuthView(generics.CreateAPIView):
             'public_target': data['public_target'],
             'keywords': data['keywords'],
             'book_style': data['book_style'],
+            'cover': data['cover'],
             'user': request.user.id
         }
 
