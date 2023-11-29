@@ -5,11 +5,8 @@ from books.models import Book
 from .serializers import BookSerializer, GetAllBooksSerializer
 from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
-from weasyprint import HTML, CSS
-import tempfile
-import base64
-from PIL import Image
-from io import BytesIO
+from weasyprint import HTML
+from django.http import HttpResponse
 
 
 class BookView(APIView):
@@ -131,6 +128,10 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         book = self.get_object(id, request)
         book_serializer = GetOneBookSerializer(book)
         book_data = book_serializer.data
-        pdf = HTML(book_data['content'], book_data['name'])
+        html_pdf = HTML(string=book_data['content'])
+        pdf = html_pdf.write_pdf()
 
-        return Response(pdf, 200)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=book.pdf'
+
+        return response
