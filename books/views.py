@@ -78,6 +78,10 @@ class OneBookAuthView(generics.CreateAPIView):
         id = kwargs['id']
         book = self.get_object(id, request)
         data = request.data
+        cover = 'cover' in data and data['cover']
+
+        if not cover:
+            cover = None
 
         data_set = {
             'content': data['content'],
@@ -90,7 +94,7 @@ class OneBookAuthView(generics.CreateAPIView):
             'public_target': data['public_target'],
             'keywords': data['keywords'],
             'book_style': data['book_style'],
-            'cover': data['cover'],
+            'cover': cover,
             'user': request.user.id
         }
 
