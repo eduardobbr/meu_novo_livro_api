@@ -5,8 +5,9 @@ from books.models import Book
 from .serializers import BookSerializer, GetAllBooksSerializer
 from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
-from weasyprint import HTML
+from weasyprint import HTML, CSS
 from django.http import HttpResponse
+from .style import css_style
 
 
 class BookView(APIView):
@@ -34,11 +35,13 @@ class CreateBookView(generics.CreateAPIView):
 
     def post(self, request):
         data = request.data
-        print(data)
-        cover = request.POST.get('cover', False)
+        cover = request.POST.get('cover', None)
+        _mutable = data._mutable
+        data._mutable = True
         data['user'] = request.user.id
         data['value'] = 0
         data['price'] = 0
+        data._mutable = _mutable
         new_book = Book.objects.create(name=data['name'],
                                        content=data['content'],
                                        synopsis=data['synopsis'],
@@ -83,6 +86,7 @@ class OneBookAuthView(generics.CreateAPIView):
         if not cover:
             cover = None
 
+        print(data['content'])
         data_set = {
             'content': data['content'],
             'synopsis': data['synopsis'],
@@ -133,10 +137,11 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         book_serializer = GetOneBookSerializer(book)
         book_data = book_serializer.data
         render_str = f'<div><img src="http://127.0.0.1:8000/{
-            book_data["cover"]}"/></div>{
+            book_data["cover"]}" class="cover"/> </div>{
             book_data['content']}'
         html_pdf = HTML(string=render_str)
-        pdf = html_pdf.write_pdf()
+        css_pdf = CSS(string=css_style)
+        pdf = html_pdf.write_pdf(stylesheets=[css_pdf])
 
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=book.pdf'
