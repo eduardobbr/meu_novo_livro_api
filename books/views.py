@@ -132,7 +132,10 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         book = self.get_object(id, request)
         book_serializer = GetOneBookSerializer(book)
         book_data = book_serializer.data
-        html_pdf = HTML(string=book_data['content'])
+        render_str = f'<div><img src="http://127.0.0.1:8000/{
+            book_data["cover"]}"/></div>{
+            book_data['content']}'
+        html_pdf = HTML(string=render_str)
         pdf = html_pdf.write_pdf()
 
         response = HttpResponse(pdf, content_type='application/pdf')
