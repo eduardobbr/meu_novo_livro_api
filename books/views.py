@@ -86,7 +86,6 @@ class OneBookAuthView(generics.CreateAPIView):
         if not cover:
             cover = None
 
-        print(data['content'])
         data_set = {
             'content': data['content'],
             'synopsis': data['synopsis'],

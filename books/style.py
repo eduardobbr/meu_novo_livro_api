@@ -384,15 +384,23 @@ css_style = """.ql-container {
   position: absolute;
   right: 15px;
 }
+.ql-editor img {
+    max-width: 100%;
+}
 
 @media print{
     h1{
     page-break-before: always;
     }
 
-    @page :first{
-        margin: 0;
-        padding: 0;
+    .cover{
+        width:1600px;
+        height:2560px;
+    }
+
+    @page{
+        width:1600px;
+        height:2560px;
     }
 }
 """
