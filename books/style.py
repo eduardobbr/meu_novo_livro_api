@@ -63,7 +63,7 @@ css_style = """.ql-container {
   list-style-type: none;
 }
 .ql-editor ul > li::before {
-  content: '\2022';
+  content: '•';
 }
 .ql-editor ul[data-checked=true],
 .ql-editor ul[data-checked=false] {
@@ -388,9 +388,6 @@ css_style = """.ql-container {
 @media print{
     h1{
     page-break-before: always;
-    }
-    .cover{
-        object-fit:fill;
     }
 
     @page :first{
