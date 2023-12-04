@@ -130,19 +130,48 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         self.check_object_permissions(request, book)
         return book
 
+    def generate_epub(self, book):
+        content = book['content']
+        content_filtered = content.split('<h1')
+        teste = []
+        for cap in content_filtered:
+            cap_title = ''
+            cap_filter = cap.split('</h1>')
+            print(cap_filter[0])
+            cap_text = f'<h1{cap}'
+            cap_xml = f'''<?xml version="1.0" encoding="utf-8"?>
+                    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+                    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+                    <html xmlns="http://www.w3.org/1999/xhtml">
+                    <head>
+                        <title>{cap_title}</title>
+                    </head>
+
+                    <body>
+                        {cap_text}
+                    </body>
+                    </html>'''
+            teste.append(cap_xml)
+
+        return teste
+
     def get(self, request, *args, **kwargs):
         id = kwargs['id']
         book = self.get_object(id, request)
         book_serializer = GetOneBookSerializer(book)
         book_data = book_serializer.data
-        render_str = f'<div><img src="http://127.0.0.1:8000/{
-            book_data["cover"]}" class="cover"/> </div>{
-            book_data['content']}'
-        html_pdf = HTML(string=render_str)
-        css_pdf = CSS(string=css_style)
-        pdf = html_pdf.write_pdf(stylesheets=[css_pdf])
+        teste = self.generate_epub(book_data)
 
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=book.pdf'
+        return Response(teste, 200)
+        # render_str = f'<div><img src="http://127.0.0.1:8000/{
+        #     book_data["cover"]}" class="cover"/> </div>{
+        #     book_data['content']}'
+        # html_pdf = HTML(string=render_str)
+        # css_pdf = CSS(string=css_style)
+        # pdf = html_pdf.write_pdf(stylesheets=[css_pdf])
 
-        return response
+        # response = HttpResponse(pdf, content_type='application/pdf')
+        # response['Content-Disposition'] = 'attachment; filename=book.pdf'
+
+        # return response
