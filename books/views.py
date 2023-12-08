@@ -136,8 +136,11 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         teste = []
         for cap in content_filtered:
             cap_title = ''
-            cap_filter = cap.split('</h1>')
-            print(cap_filter[0])
+            cap_filter = cap.split('>"')
+            if len(cap_filter) > 1:
+                cap_filter = cap_filter[1].split('"<')
+                cap_title = cap_filter[0]
+            print(cap_title)
             cap_text = f'<h1{cap}'
             cap_xml = f'''<?xml version="1.0" encoding="utf-8"?>
                     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
