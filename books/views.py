@@ -193,6 +193,33 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         with open(f'{book_path}/page_styles.css', 'w') as f:
             f.write(page_style)
 
+        title_page = f"""
+                <?xml version="1.0" encoding="utf-8"?>
+                <!DOCTYPE html>
+
+                <html xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:epub="http://www.idpf.org/2007/ops">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="width=454,height=652"/>
+                    <title>{book['title']}</title>
+                    <link href="stylesheet.css" rel="stylesheet"
+                    type="text/css"/>
+                </head>
+                <body id="{book['title']}" lang="pt-BR" xml:lang="pt-BR"
+                style="width:454px;height:652px">
+                    <div id="container">
+                            <img class='cover' src="{book['cover']}"
+                            alt=""/>
+                    </div>
+                </body>
+                </html>
+                    """
+
+        Path(f'{book_path}/titlepage.xhtml').touch()
+        with open(f'{book_path}/titlepage.xhtml', 'w') as f:
+            f.write(title_page)
+
         return caps
 
     def get(self, request, *args, **kwargs):
