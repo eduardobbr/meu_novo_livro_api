@@ -7,7 +7,9 @@ from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
 from weasyprint import HTML, CSS
 from django.http import HttpResponse
-from .style import css_style
+from .style import css_style, stylesheet, page_style
+import os
+from pathlib import Path
 
 
 class BookView(APIView):
@@ -133,14 +135,29 @@ class ConvertDownloadBookView(generics.CreateAPIView):
     def generate_epub(self, book):
         content = book['content']
         content_filtered = content.split('<h1')
-        teste = []
+        path = 'bookGen'
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        book_path = f'{path}/{book['name']}'
+        if not os.path.exists(book_path):
+            os.mkdir(book_path)
+
+        caps = []
+        content_filtered.pop(0)
+
         for cap in content_filtered:
             cap_title = ''
-            cap_filter = cap.split('>"')
-            if len(cap_filter) > 1:
-                cap_filter = cap_filter[1].split('"<')
+            cap_filter = cap.split('</h1>')
+            if ('<em>' in cap_filter[0]):
+                cap_filter = cap_filter[0].split('<em>')
+                cap_filter = cap_filter[1].split('</em>')
                 cap_title = cap_filter[0]
-            print(cap_title)
+            elif ('<strong>' in cap_filter[0]):
+                cap_filter = cap_filter[0].split('<strong>')
+                cap_filter = cap_filter[1].split('</strong>')
+                cap_title = cap_filter[0]
+
             cap_text = f'<h1{cap}'
             cap_xml = f'''<?xml version="1.0" encoding="utf-8"?>
                     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
@@ -152,12 +169,31 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                     </head>
 
                     <body>
-                        {cap_text}
+                        <div class="editor ql-editor">
+                            {cap_text}
+                        </div>
                     </body>
                     </html>'''
-            teste.append(cap_xml)
 
-        return teste
+            Path(f'{book_path}/{cap_title}.xhtml').touch()
+            with open(f'{book_path}/{cap_title}.xhtml', 'w') as f:
+                f.write(cap_xml)
+
+            caps.append({cap_title, cap_xml})
+
+        Path(f'{book_path}/mimetype').touch()
+        with open(f'{book_path}/mimetype', 'w') as f:
+            f.write('application/epub+zip ')
+
+        Path(f'{book_path}/stylesheet.css').touch()
+        with open(f'{book_path}/stylesheet.css', 'w') as f:
+            f.write(stylesheet)
+
+        Path(f'{book_path}/page_styles.css').touch()
+        with open(f'{book_path}/page_styles.css', 'w') as f:
+            f.write(page_style)
+
+        return caps
 
     def get(self, request, *args, **kwargs):
         id = kwargs['id']
@@ -166,15 +202,14 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         book_data = book_serializer.data
         teste = self.generate_epub(book_data)
 
-        return Response(teste, 200)
-        # render_str = f'<div><img src="http://127.0.0.1:8000/{
-        #     book_data["cover"]}" class="cover"/> </div>{
-        #     book_data['content']}'
-        # html_pdf = HTML(string=render_str)
-        # css_pdf = CSS(string=css_style)
-        # pdf = html_pdf.write_pdf(stylesheets=[css_pdf])
+        render_str = f'<div><img src="http://127.0.0.1:8000/{
+            book_data["cover"]}" class="cover"/> </div>{
+            book_data['content']}'
+        html_pdf = HTML(string=render_str)
+        css_pdf = CSS(string=css_style)
+        pdf = html_pdf.write_pdf(stylesheets=[css_pdf])
 
-        # response = HttpResponse(pdf, content_type='application/pdf')
-        # response['Content-Disposition'] = 'attachment; filename=book.pdf'
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=book.pdf'
 
-        # return response
+        return response
