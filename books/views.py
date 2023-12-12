@@ -11,6 +11,8 @@ from .style import css_style, stylesheet, page_style
 import os
 from pathlib import Path
 from datetime import datetime
+import uuid
+import shutil
 
 
 class BookView(APIView):
@@ -136,6 +138,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
     def generate_epub(self, book):
         content = book['content']
         content_filtered = content.split('<h1')
+        book_uuid = uuid.uuid4()
         path = 'bookGen'
         if not os.path.exists(path):
             os.mkdir(path)
@@ -147,11 +150,15 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         caps = []
 
         class Cap:
-            def __init__(self, title, xml):
+            def __init__(self, title, xml, name, cap_number):
                 self.title = title
                 self.xml = xml
+                self.name = name
+                self.cap_number = cap_number
 
         content_filtered.pop(0)
+
+        cap_counter = 1
 
         for cap in content_filtered:
             cap_title = ''
@@ -182,11 +189,14 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                     </body>
                     </html>'''
 
-            Path(f'{book_path}/{cap_title}.xhtml').touch()
-            with open(f'{book_path}/{cap_title}.xhtml', 'w') as f:
+            cap_name = f'{book['author']}-{cap_counter}'
+
+            Path(f'{book_path}/{cap_name}.xhtml').touch()
+            with open(f'{book_path}/{cap_name}.xhtml', 'w') as f:
                 f.write(cap_xml)
 
-            caps.append(Cap(cap_title, cap_xml))
+            caps.append(Cap(cap_title, cap_xml, cap_name, cap_counter))
+            cap_counter += 1
 
         Path(f'{book_path}/mimetype').touch()
         with open(f'{book_path}/mimetype', 'w') as f:
@@ -200,8 +210,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         with open(f'{book_path}/page_styles.css', 'w') as f:
             f.write(page_style)
 
-        title_page = f"""
-                <?xml version="1.0" encoding="utf-8"?>
+        title_page = f"""<?xml version="1.0" encoding="utf-8"?>
                 <!DOCTYPE html>
 
                 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -229,6 +238,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                     </div>
                 </body>
                 </html>
+                </xml>
                     """
 
         Path(f'{book_path}/titlepage.xhtml').touch()
@@ -238,24 +248,39 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         toc_list = []
 
         for cap in caps:
-            toc_list.append(f"""<li><a href='{cap.title}.xhtml'>{
-                            cap.title}</a></li>""")
+            toc_list.append(f"""<navPoint class="chapter" id="{cap.name}"
+                            playOrder="{cap.cap_number}">
+                                    <navLabel><text>{cap.title}</text></navLabel>
+                                    <content src="{cap.name}.xhtml"/>
+                                </navPoint>
+                            """)
 
-        toc_text = f"""
-                    <html xmlns="http://www.w3.org/1999/xhtml"
-                    xmlns:epub="http://www.idpf.org/2007/ops">
+        toc_text = f"""<?xml version="1.0" encoding="UTF-8"?>
+                        <!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
+                        "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+
+                        <ncx version="2005-1" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+
                         <head>
-                            <title>{book['title']}</title>
+                            <meta name="dtb:uid" content="{book_uuid}"/>
+                            <meta name="dtb:depth" content="1"/>
+                            <meta name="dtb:totalPageCount" content="0"/>
+                            <meta name="dtb:maxPageNumber" content="0"/>
                         </head>
-                        <body>
-                            <nav epub:type="toc" id="toc" role="doc-toc">
-                                <h1>Sumário</h1>
-                                <ol>
-                                    {''.join(str(cap) for cap in toc_list)}
-                                </ol>
-                            </nav>
-                        </body>
-                    </html>
+
+                        <docTitle>
+                            <text>Sumário</text>
+                        </docTitle>
+
+                        <docAuthor>
+                            <text>{book['author']}</text>
+                        </docAuthor>
+
+                        <navMap>
+                        {''.join(str(cap) for cap in toc_list)}
+                        </navMap>
+
+                        </ncx>
                     """
 
         Path(f'{book_path}/toc.ncx').touch()
@@ -272,16 +297,20 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         item_list = []
 
         for cap in caps:
-            item_list.append(f"""<item id='{cap.title}' href='{cap.title}.xhtml'
+            item_list.append(f"""<item id='{cap.name}' href='{cap.name}.xhtml'
                               media-type="application/xhtml+xml"/>""")
 
-        meta = f"""
-                    <?xml version="1.0" encoding="utf-8"?>
+        item_ref_list = []
+
+        for cap in caps:
+            item_ref_list.append(f"""<itemref idref='{cap.name}' """)
+        meta = f"""<?xml version="1.0" encoding="utf-8"?>
                     <package version="3.0" unique-identifier="bookid" prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/" xmlns="http://www.idpf.org/2007/opf">
                     <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
                         <meta property="ibooks:specified-fonts">true</meta>
                         <dc:title>{book['title']}</dc:title>
                         <dc:creator id="cre">{book['author']}</dc:creator>
+                        <meta name="dtb:uid" content="{book_uuid}"/>
                         <meta refines="#cre" property="role" scheme="marc:relators">aut</meta>
                         <dc:date>{datetime.now()}</dc:date>
                         <dc:language>pt-BR</dc:language>
@@ -292,28 +321,31 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                     </metadata>
                     <manifest>
                         <item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml"/>
-                        {''.join(str(cap) for cap in item_list)}
-
                         <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+                        {''.join(str(cap) for cap in item_list)}
                         <item id="page_styles.css" href="page_styles.css" media-type="text/css"/>
                         <item id="stylesheet.css" href="stylesheet.css" media-type="text/css"/>
                     </manifest>
                     <spine toc="ncx">
-                        <itemref idref="toc.ncx" linear="no"/>
+                        <itemref idref="ncx" linear="no"/>
+                        {''.join(str(cap) for cap in item_ref_list)}
                     </spine>
                         """
         Path(f'{book_path}/content.opf').touch()
         with open(f'{book_path}/content.opf', 'w') as f:
             f.write(meta)
 
-        return caps
+        shutil.make_archive(f'{book_path}', 'zip', f'{book_path}')
+        epub = Path(f'{book_path}.zip')
+        epub.rename(epub.with_suffix('.epub'))
+        return epub
 
     def get(self, request, *args, **kwargs):
         id = kwargs['id']
         book = self.get_object(id, request)
         book_serializer = GetOneBookSerializer(book)
         book_data = book_serializer.data
-        teste = self.generate_epub(book_data)
+        epub = self.generate_epub(book_data)
 
         render_str = f'<div><img src="http://127.0.0.1:8000/{
             book_data["cover"]}" class="cover"/> </div>{
