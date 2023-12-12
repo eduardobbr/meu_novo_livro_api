@@ -261,6 +261,13 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         with open(f'{book_path}/toc.xhtml', 'w') as f:
             f.write(toc_text)
 
+        if not os.path.exists(f'{book_path}/META-INF'):
+            os.mkdir(f'{book_path}/META-INF')
+
+        Path(f'{book_path}/META-INF/container.xhtml').touch()
+        # with open(f'{book_path}/META-INF/container.xhtml', 'w') as f:
+        #     f.write(toc_text)
+
         return caps
 
     def get(self, request, *args, **kwargs):
