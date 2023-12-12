@@ -13,6 +13,7 @@ from pathlib import Path
 from datetime import datetime
 import uuid
 import shutil
+import pickle
 
 
 class BookView(APIView):
@@ -347,6 +348,8 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         book_data = book_serializer.data
         epub = self.generate_epub(book_data)
 
+        shutil.rmtree(f'bookGen/{book_data['name']}')
+
         render_str = f'<div><img src="http://127.0.0.1:8000/{
             book_data["cover"]}" class="cover"/> </div>{
             book_data['content']}'
@@ -355,6 +358,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         pdf = html_pdf.write_pdf(stylesheets=[css_pdf])
 
         response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=book.pdf'
+        response['Content-Disposition'] = f'attachment; filename={
+            book_data['name']}.pdf'
 
         return response
