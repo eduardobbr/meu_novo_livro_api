@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from .style import css_style, stylesheet, page_style
 import os
 from pathlib import Path
+from datetime import datetime
 
 
 class BookView(APIView):
@@ -221,7 +222,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                     </div>
                     <div id="textTitle" style='position:absolute;
                     width: 454px; height: 653px;display:flex; justify-content:
-                    center; align-items:center;'>
+                    center; align-items:center;flex-direction:column'>
                             <h1>{book['title']}</h1>
                             <h2>{book['subtitle']}</h2>
                             <h2>{book['author']}</h2>
@@ -244,7 +245,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                     <html xmlns="http://www.w3.org/1999/xhtml"
                     xmlns:epub="http://www.idpf.org/2007/ops">
                         <head>
-                            <title>Teste keyla</title>
+                            <title>{book['title']}</title>
                         </head>
                         <body>
                             <nav epub:type="toc" id="toc" role="doc-toc">
@@ -257,8 +258,8 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                     </html>
                     """
 
-        Path(f'{book_path}/toc.xhtml').touch()
-        with open(f'{book_path}/toc.xhtml', 'w') as f:
+        Path(f'{book_path}/toc.ncx').touch()
+        with open(f'{book_path}/toc.ncx', 'w') as f:
             f.write(toc_text)
 
         if not os.path.exists(f'{book_path}/META-INF'):
@@ -267,6 +268,43 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         Path(f'{book_path}/META-INF/container.xhtml').touch()
         # with open(f'{book_path}/META-INF/container.xhtml', 'w') as f:
         #     f.write(toc_text)
+
+        item_list = []
+
+        for cap in caps:
+            item_list.append(f"""<item id='{cap.title}' href='{cap.title}.xhtml'
+                              media-type="application/xhtml+xml"/>""")
+
+        meta = f"""
+                    <?xml version="1.0" encoding="utf-8"?>
+                    <package version="3.0" unique-identifier="bookid" prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/" xmlns="http://www.idpf.org/2007/opf">
+                    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+                        <meta property="ibooks:specified-fonts">true</meta>
+                        <dc:title>{book['title']}</dc:title>
+                        <dc:creator id="cre">{book['author']}</dc:creator>
+                        <meta refines="#cre" property="role" scheme="marc:relators">aut</meta>
+                        <dc:date>{datetime.now()}</dc:date>
+                        <dc:language>pt-BR</dc:language>
+                        <meta property="dcterms:modified">2023-11-01T16:29:53Z</meta>
+                        <meta property="rendition:orientation">portrait</meta>
+                        <meta name="generator" content="Meu Novo Livro" />
+                        <meta name="cover" content="cover.jpeg" />
+                    </metadata>
+                    <manifest>
+                        <item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml"/>
+                        {''.join(str(cap) for cap in item_list)}
+
+                        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+                        <item id="page_styles.css" href="page_styles.css" media-type="text/css"/>
+                        <item id="stylesheet.css" href="stylesheet.css" media-type="text/css"/>
+                    </manifest>
+                    <spine toc="ncx">
+                        <itemref idref="toc.ncx" linear="no"/>
+                    </spine>
+                        """
+        Path(f'{book_path}/content.opf').touch()
+        with open(f'{book_path}/content.opf', 'w') as f:
+            f.write(meta)
 
         return caps
 
