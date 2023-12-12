@@ -144,6 +144,12 @@ class ConvertDownloadBookView(generics.CreateAPIView):
             os.mkdir(book_path)
 
         caps = []
+
+        class Cap:
+            def __init__(self, title, xml):
+                self.title = title
+                self.xml = xml
+
         content_filtered.pop(0)
 
         for cap in content_filtered:
@@ -179,7 +185,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
             with open(f'{book_path}/{cap_title}.xhtml', 'w') as f:
                 f.write(cap_xml)
 
-            caps.append({cap_title, cap_xml})
+            caps.append(Cap(cap_title, cap_xml))
 
         Path(f'{book_path}/mimetype').touch()
         with open(f'{book_path}/mimetype', 'w') as f:
@@ -227,6 +233,33 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         Path(f'{book_path}/titlepage.xhtml').touch()
         with open(f'{book_path}/titlepage.xhtml', 'w') as f:
             f.write(title_page)
+
+        toc_list = []
+
+        for cap in caps:
+            toc_list.append(f"""<li><a href='{cap.title}.xhtml'>{
+                            cap.title}</a></li>""")
+
+        toc_text = f"""
+                    <html xmlns="http://www.w3.org/1999/xhtml"
+                    xmlns:epub="http://www.idpf.org/2007/ops">
+                        <head>
+                            <title>Teste keyla</title>
+                        </head>
+                        <body>
+                            <nav epub:type="toc" id="toc" role="doc-toc">
+                                <h1>Sumário</h1>
+                                <ol>
+                                    {''.join(str(cap) for cap in toc_list)}
+                                </ol>
+                            </nav>
+                        </body>
+                    </html>
+                    """
+
+        Path(f'{book_path}/toc.xhtml').touch()
+        with open(f'{book_path}/toc.xhtml', 'w') as f:
+            f.write(toc_text)
 
         return caps
 
