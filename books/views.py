@@ -208,9 +208,17 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                 </head>
                 <body id="{book['title']}" lang="pt-BR" xml:lang="pt-BR"
                 style="width:454px;height:652px">
-                    <div id="container">
+                    <div id="imgTitle" style='position:absolute;
+                    width: 454px; height: 653px;'>
                             <img class='cover' src="{book['cover']}"
                             alt=""/>
+                    </div>
+                    <div id="textTitle" style='position:absolute;
+                    width: 454px; height: 653px;display:flex; justify-content:
+                    center; align-items:center;'>
+                            <h1>{book['title']}</h1>
+                            <h2>{book['subtitle']}</h2>
+                            <h2>{book['author']}</h2>
                     </div>
                 </body>
                 </html>
