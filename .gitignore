@@ -6,6 +6,7 @@ __pycache__
 db.sqlite3
 media
 bookGen
+tmp
 
 # Backup files # 
 *.bak 

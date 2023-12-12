@@ -13,7 +13,6 @@ from pathlib import Path
 from datetime import datetime
 import uuid
 import shutil
-import pickle
 
 
 class BookView(APIView):
@@ -338,7 +337,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 
         shutil.make_archive(f'{book_path}', 'zip', f'{book_path}')
         epub = Path(f'{book_path}.zip')
-        epub.rename(epub.with_suffix('.epub'))
+        epub = epub.rename(epub.with_suffix('.epub'))
         return epub
 
     def get(self, request, *args, **kwargs):
@@ -350,15 +349,37 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 
         shutil.rmtree(f'bookGen/{book_data['name']}')
 
-        render_str = f'<div><img src="http://127.0.0.1:8000/{
+        path = 'tmp'
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        book_path = f'{path}/{book_data['name']}'
+        if not os.path.exists(book_path):
+            os.mkdir(book_path)
+
+        shutil.copy(epub, book_path)
+
+        os.remove(f'bookGen/{book_data['name']}.epub')
+
+        render_str = f'''<div><img src="http://127.0.0.1:8000/{
             book_data["cover"]}" class="cover"/> </div>{
-            book_data['content']}'
+            book_data['content']}'''
         html_pdf = HTML(string=render_str)
         css_pdf = CSS(string=css_style)
-        pdf = html_pdf.write_pdf(stylesheets=[css_pdf])
+        html_pdf.write_pdf(f'{book_path}/{book_data['name']}.pdf',
+                           stylesheets=[css_pdf])
 
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename={
-            book_data['name']}.pdf'
+        zip = shutil.make_archive(f'{book_path}', 'zip', f'{book_path}')
+
+        zip_to_download = open(zip, 'rb')
+
+        response = HttpResponse(
+            zip_to_download, content_type='''application/zip''')
+
+        response['Content-Disposition'] = f'''attachment; filename={
+            book_data['name']}.zip'''
+
+        shutil.rmtree(book_path)
+        os.remove(f'{path}/{book_data['name']}.zip')
 
         return response
