@@ -2,7 +2,7 @@ from django.db import models
 
 
 def upload_page_name(self, filename):
-    return f'books/{self.name}/cover/{filename}'
+    return f'books/{self.name}/cover.jpeg'
 
 
 class Book(models.Model):

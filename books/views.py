@@ -89,7 +89,10 @@ class OneBookAuthView(generics.CreateAPIView):
         cover = 'cover' in data and data['cover']
 
         if not cover:
-            cover = None
+            cover = book.cover
+
+        if cover:
+            os.remove(f'media/books/{book.name}/cover.jpeg')
 
         data_set = {
             'content': data['content'],
@@ -291,8 +294,6 @@ class ConvertDownloadBookView(generics.CreateAPIView):
             os.mkdir(f'{book_path}/META-INF')
 
         Path(f'{book_path}/META-INF/container.xhtml').touch()
-        # with open(f'{book_path}/META-INF/container.xhtml', 'w') as f:
-        #     f.write(toc_text)
 
         item_list = []
 
@@ -334,6 +335,10 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         Path(f'{book_path}/content.opf').touch()
         with open(f'{book_path}/content.opf', 'w') as f:
             f.write(meta)
+
+        cover_path = f'{book['cover']}'
+
+        shutil.copy(cover_path[1:], f'{book_path}/cover.jpeg')
 
         shutil.make_archive(f'{book_path}', 'zip', f'{book_path}')
         epub = Path(f'{book_path}.zip')
