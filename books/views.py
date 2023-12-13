@@ -177,12 +177,12 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 
             cap_text = f'<h1{cap}'
             cap_xml = f'''<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>{cap_title}</title>
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body>
@@ -339,7 +339,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 </manifest>
 <spine toc="ncx">
     <itemref idref="cover" />
-    <itemref idref="nav" linear="no"/>
+    <itemref idref="nav.xhtml" linear="no"/>
     <itemref idref="ncx" linear="no"/>
     {''.join(str(cap) for cap in item_ref_list)}
 </spine>
