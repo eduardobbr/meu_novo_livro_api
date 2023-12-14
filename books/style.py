@@ -409,11 +409,23 @@ css_style = """.ql-container {
 page_style = """
 @media print{
     @page{
-        width:1600px;
-        height:2560px;
-        margin: 5pt;
+      margin: 5pt;
     }
+    @page :first{
+      margin: 500pt;
+    }
+
 }"""
+
+nav_style = """h1{
+text-align: center;
+}
+
+a{
+text-decoration: none;
+color: black;
+}
+"""
 
 stylesheet = """.ql-container {
   box-sizing: border-box;
@@ -808,11 +820,6 @@ stylesheet = """.ql-container {
 @media print{
     h1{
     page-break-before: always;
-    }
-
-    .cover{
-        width:1600px;
-        height:2560px;
     }
 }
     """

@@ -7,7 +7,7 @@ from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
 from weasyprint import HTML, CSS
 from django.http import HttpResponse
-from .style import css_style, stylesheet, page_style
+from .style import css_style, stylesheet, page_style, nav_style
 import os
 from pathlib import Path
 from datetime import datetime
@@ -183,6 +183,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 <head>
     <title>{cap_title}</title>
     <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="page_styles.css">
 </head>
 
 <body>
@@ -213,12 +214,18 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         with open(f'{book_path}/page_styles.css', 'w') as f:
             f.write(page_style)
 
+        Path(f'{book_path}/nav_styles.css').touch()
+        with open(f'{book_path}/nav_styles.css', 'w') as f:
+            f.write(nav_style)
+
         title_page = f"""<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
 <head>
   <title>{book['title']}</title>
+  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="page_styles.css">
 </head>
 <body>
   <div style="height: 100vh; text-align: center; padding: 0pt; margin: 0pt;">
@@ -283,6 +290,9 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="en" xml:lang="en">
 <head>
   <title>{book['title']}</title>
+  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="nav_styles.css">
+  <link rel="stylesheet" href="page_styles.css">
   <meta charset="utf-8" /></head>
 <body epub:type="frontmatter">
   <nav epub:type="toc" id="toc" role="doc-toc">
@@ -335,6 +345,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
     {''.join(str(cap) for cap in item_list)}
     <item id="page_styles.css" href="page_styles.css" media-type="text/css"/>
     <item id="stylesheet.css" href="stylesheet.css" media-type="text/css"/>
+    <item id="nav_styles.css" href="nav_styles.css" media-type="text/css"/>
     <item id="nav.xhtml" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
 </manifest>
 <spine toc="ncx">
