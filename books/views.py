@@ -182,8 +182,8 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>{cap_title}</title>
-    <link rel="stylesheet" href="stylesheet.css">
-    <link rel="stylesheet" href="page_styles.css">
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="stylesheet" href="page_styles.css" />
 </head>
 
 <body>
@@ -224,13 +224,13 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
 <head>
   <title>{book['title']}</title>
-  <link rel="stylesheet" href="stylesheet.css">
-  <link rel="stylesheet" href="page_styles.css">
+  <link rel="stylesheet" href="stylesheet.css" />
+  <link rel="stylesheet" href="page_styles.css" />
 </head>
 <body>
-  <div style="height: 100vh; text-align: center; padding: 0pt; margin: 0pt;">
-    <svg xmlns="http://www.w3.org/2000/svg" height="100%" preserveAspectRatio="xMidYMid meet" version="1.1" viewBox="0 0 2879 4607" width="100%" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <image width="2879" height="4607" xlink:href="cover.jpeg"/>
+  <div style="height: 100vh; width: 100vw; text-align: center; padding: 0pt; margin: 0pt;">
+    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin slice" version="1.1" viewBox="0 0 2879 4607" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <image width="100%" height="4607" xlink:href="cover.jpeg"/>
     </svg>
   </div>
 </body>
@@ -290,9 +290,9 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="en" xml:lang="en">
 <head>
   <title>{book['title']}</title>
-  <link rel="stylesheet" href="stylesheet.css">
-  <link rel="stylesheet" href="nav_styles.css">
-  <link rel="stylesheet" href="page_styles.css">
+  <link rel="stylesheet" href="stylesheet.css" />
+  <link rel="stylesheet" href="nav_styles.css" />
+  <link rel="stylesheet" href="page_styles.css" />
   <meta charset="utf-8" /></head>
 <body epub:type="frontmatter">
   <nav epub:type="toc" id="toc" role="doc-toc">

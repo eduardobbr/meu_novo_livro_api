@@ -408,11 +408,11 @@ css_style = """.ql-container {
 
 page_style = """
 @media print{
+    @page :first{
+      margin: 0;
+    }
     @page{
       margin: 5pt;
-    }
-    @page :first{
-      margin: 500pt;
     }
 
 }"""
