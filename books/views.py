@@ -87,12 +87,12 @@ class OneBookAuthView(generics.CreateAPIView):
         book = self.get_object(id, request)
         data = request.data
         cover = 'cover' in data and data['cover']
-
+        cover_path = f'media/books/{book.name}/cover.jpeg'
         if not cover:
             cover = book.cover
 
-        if cover:
-            os.remove(f'media/books/{book.name}/cover.jpeg')
+        if cover and os.path.exists(cover_path):
+            os.remove(cover_path)
 
         data_set = {
             'content': data['content'],
@@ -228,7 +228,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
   <link rel="stylesheet" href="page_styles.css" />
 </head>
 <body>
-  <div style="height: 100vh; width: 100vw; text-align: center; padding: 0pt; margin: 0pt;">
+  <div style="height: 100vh; width: 100vw; text-align: center;">
     <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin slice" version="1.1" viewBox="0 0 2879 4607" xmlns:xlink="http://www.w3.org/1999/xlink">
       <image width="100%" height="4607" xlink:href="cover.jpeg"/>
     </svg>
