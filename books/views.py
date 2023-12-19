@@ -8,6 +8,7 @@ from .permissions import IsOwner
 from weasyprint import HTML, CSS
 from django.http import HttpResponse
 from .style import css_style, stylesheet, page_style, nav_style
+from .style import title_page_style
 import os
 from pathlib import Path
 from datetime import datetime
@@ -176,6 +177,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
                 cap_title = cap_filter[0]
 
             cap_text = f'<h1{cap}'
+            cap_text = cap_text.replace('<br>', '<br />')
             cap_xml = f'''<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
@@ -218,6 +220,10 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         with open(f'{book_path}/nav_styles.css', 'w') as f:
             f.write(nav_style)
 
+        Path(f'{book_path}/title_page_style.css').touch()
+        with open(f'{book_path}/title_page_style.css', 'w') as f:
+            f.write(title_page_style)
+
         title_page = f"""<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!DOCTYPE html>
 
@@ -225,13 +231,16 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 <head>
   <title>{book['title']}</title>
   <link rel="stylesheet" href="stylesheet.css" />
+  <link rel="stylesheet" href="title_page_style.css" />
   <link rel="stylesheet" href="page_styles.css" />
 </head>
 <body>
-  <div style="height: 100vh; width: 100vw; text-align: center;">
-    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin slice" version="1.1" viewBox="0 0 2879 4607" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <image width="100%" height="4607" xlink:href="cover.jpeg"/>
-    </svg>
+  <div class="title_div">
+    <div>
+    <h1>{book['title']}</h1>
+    <h2>{book['subtitle']}</h2>
+    </div>
+    <h2>{book['author']}</h2>
   </div>
 </body>
 </html>"""
@@ -346,10 +355,12 @@ class ConvertDownloadBookView(generics.CreateAPIView):
     <item id="page_styles.css" href="page_styles.css" media-type="text/css"/>
     <item id="stylesheet.css" href="stylesheet.css" media-type="text/css"/>
     <item id="nav_styles.css" href="nav_styles.css" media-type="text/css"/>
+    <item id="title_page_style.css" href="title_page_style.css" media-type="text/css"/>
     <item id="nav.xhtml" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
 </manifest>
 <spine toc="ncx">
     <itemref idref="cover" />
+    <itemref idref="titlepage" />
     <itemref idref="nav.xhtml" linear="no"/>
     <itemref idref="ncx" linear="no"/>
     {''.join(str(cap) for cap in item_ref_list)}

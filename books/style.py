@@ -423,6 +423,17 @@ color: black;
 }
 """
 
+title_page_style = """
+.title_div{
+height: 100vh;
+width: 100vw;
+text-align: center;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+}"""
+
 stylesheet = """.ql-container {
   box-sizing: border-box;
   font-size: 13px;
