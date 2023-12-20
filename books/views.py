@@ -89,11 +89,11 @@ class OneBookAuthView(generics.CreateAPIView):
         data = request.data
         cover = 'cover' in data and data['cover']
         cover_path = f'media/books/{book.name}/cover.jpeg'
-        if not cover:
-            cover = book.cover
-
         if cover and os.path.exists(cover_path):
             os.remove(cover_path)
+
+        if not cover:
+            cover = book.cover
 
         data_set = {
             'content': data['content'],
