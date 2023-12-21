@@ -78,3 +78,157 @@ Após a instalação de todas as dependências rode o seguinte comando para inic
 ```
 python manage.py runserver
 ```
+
+## Requisições
+
+### Usuário
+
+##### Registrar
+
+> POST - api/register/
+>
+> Body
+>
+> ```json
+> {
+>   "username": "teste",
+>   "email": "teste@teste.com",
+>   "password": "112233",
+>   "password2": "112233"
+> }
+> ```
+
+##### Login
+
+> POST - api/login/
+>
+> Body
+>
+> ```json
+> {
+>   "username": "teste",
+>   "password": "112233"
+> }
+> ```
+
+##### Atualização do usuário
+
+> PATCH - api/users/\<user-id>/
+>
+> Header
+>
+> ```json
+> {
+>   "Authorization": "Bearer {token}"
+> }
+> ```
+>
+> Body
+>
+> ```json
+> {
+>   "first_name": "teste1",
+>   "last_name": "Silva",
+>   "cpf": "11026593980"
+> }
+> ```
+
+##### Listar todos os usuários
+
+> GET - api/users/
+>
+> Header
+>
+> ```json
+> {
+>   "Authorization": "Bearer {token}"
+> }
+> ```
+
+### Livros
+
+##### Listar todos os lívros
+
+> GET - api/books/
+>
+> Não é necessário passar nenhuma informação
+
+##### Listar livros de um usuário
+
+> GET - api/books?user=\<user-id>
+>
+> Header
+>
+> ```json
+> {
+>   "Authorization": "Bearer {token}"
+> }
+> ```
+
+##### Criar um livro
+
+> POST - api/books/
+>
+> Header
+>
+> ```json
+> {
+>   "Authorization": "Bearer {token}"
+> }
+> ```
+>
+> Body (form-data)
+>
+> ```
+> {
+>   "name": "nome",
+>   "content": "conteúdo",
+>   "synopsis": "sinópse",
+>   "value": valor,
+>   "production": true,
+>   "cover": file,
+>   "title": "titulo"
+>   "subtitle": "subtitulo",
+>   "author": "nome do autor",
+>   "isbn": "isbn",
+>   "public_target": classificação indicativa,
+>   "keywords": lista de palavras chave,
+>   "book_style": (C, M) (clássico, moderno),
+>   "price": preço
+> }
+> ```
+
+##### Editar um livro
+
+> PATCH - api/books/\<book_id>
+>
+> Header
+>
+> ```json
+> {
+>   "Authorization": "Bearer {token}"
+> }
+> ```
+>
+> Body (form-data)
+>
+> ```
+> {
+>   "content": "conteúdo",
+>   "synopsis": "sinópse",
+> }
+> ```
+
+##### Publicar um livro
+
+> GET - api/books/\<book_id>/generate
+>
+> Header
+>
+> ```json
+> {
+>   "Authorization": "Bearer {token}"
+> }
+> ```
+>
+> Não precisa de body
