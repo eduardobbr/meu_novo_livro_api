@@ -133,7 +133,7 @@ class OneBookAuthView(generics.CreateAPIView):
         book = self.get_object(id, request)
         book.delete()
 
-        return Response({"deleted": book.name}, 400)
+        return Response(204)
 
 
 class ConvertDownloadBookView(generics.CreateAPIView):
