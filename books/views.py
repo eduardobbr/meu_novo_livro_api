@@ -186,7 +186,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
             cap_text = f'<h1{cap}'
             cap_text = cap_text.replace('<br>', '<br />')
             cap_xml = f'''<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -213,7 +213,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 
         Path(f'{book_path}/mimetype').touch()
         with open(f'{book_path}/mimetype', 'w') as f:
-            f.write('application/epub+zip ')
+            f.write('application/epub+zip')
 
         Path(f'{book_path}/stylesheet.css').touch()
         with open(f'{book_path}/stylesheet.css', 'w') as f:
@@ -327,7 +327,14 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         if not os.path.exists(f'{book_path}/META-INF'):
             os.mkdir(f'{book_path}/META-INF')
 
-        Path(f'{book_path}/META-INF/container.xhtml').touch()
+        Path(f'{book_path}/META-INF/container.xml').touch()
+        with open(f'{book_path}/META-INF/container.xml', 'w') as f:
+            f.write("""<?xml version="1.0"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="content.opf" media-type="application/oebps-package+xml" />
+  </rootfiles>
+</container>""")
 
         item_list = []
 
@@ -366,8 +373,8 @@ class ConvertDownloadBookView(generics.CreateAPIView):
     <item id="nav.xhtml" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
 </manifest>
 <spine toc="ncx">
-    <itemref idref="cover" />
-    <itemref idref="titlepage" />
+    <itemref idref="cover"/>
+    <itemref idref="titlepage"/>
     <itemref idref="nav.xhtml" linear="no"/>
     <itemref idref="ncx" linear="no"/>
     {''.join(str(cap) for cap in item_ref_list)}
