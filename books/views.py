@@ -347,10 +347,11 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         for cap in caps:
             item_ref_list.append(f"""<itemref idref='{cap.name}'/>""")
         meta = f"""<?xml version="1.0" encoding="utf-8"?>
-<package version="3.0" unique-identifier="bookid" prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/" xmlns="http://www.idpf.org/2007/opf">
+<package version="3.0" unique-identifier="{book_uuid}" prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/" xmlns="http://www.idpf.org/2007/opf">
 <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <meta property="ibooks:specified-fonts">true</meta>
     <dc:title>{book['title']}</dc:title>
+    <dc:identifier>{book_uuid}</dc:identifier>
     <dc:creator id="cre">{book['author']}</dc:creator>
     <meta name="dtb:uid" content="{book_uuid}"/>
     <meta refines="#cre" property="role" scheme="marc:relators">aut</meta>
@@ -363,7 +364,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 </metadata>
 <manifest>
     <item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml"/>
-    <item id="cover" href="cover.jpeg" media-type="image/jpeg" />
+    <item id="cover" href="cover.jpeg" media-type="image/jpeg"/>
     <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
     {''.join(str(cap) for cap in item_list)}
     <item id="page_styles.css" href="page_styles.css" media-type="text/css"/>
@@ -373,10 +374,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
     <item id="nav.xhtml" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
 </manifest>
 <spine toc="ncx">
-    <itemref idref="cover"/>
-    <itemref idref="titlepage"/>
     <itemref idref="nav.xhtml" linear="no"/>
-    <itemref idref="ncx" linear="no"/>
     {''.join(str(cap) for cap in item_ref_list)}
 </spine>
 </package>"""

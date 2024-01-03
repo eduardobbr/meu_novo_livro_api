@@ -798,10 +798,6 @@ stylesheet = """.ql-container {
 .ql-editor .ql-size-huge {
   font-size: 2.5em;
 }
-.ql-editor .ql-direction-rtl {
-  direction: rtl;
-  text-align: inherit;
-}
 .ql-editor .ql-align-center {
   text-align: center;
 }
