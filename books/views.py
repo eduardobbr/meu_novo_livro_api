@@ -351,9 +351,9 @@ class ConvertDownloadBookView(generics.CreateAPIView):
 <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <meta property="ibooks:specified-fonts">true</meta>
     <dc:title>{book['title']}</dc:title>
-    <dc:identifier>{book_uuid}</dc:identifier>
+    <dc:identifier>urn:uuid:{book_uuid}</dc:identifier>
     <dc:creator id="cre">{book['author']}</dc:creator>
-    <meta name="dtb:uid" content="{book_uuid}"/>
+    <meta name="dtb:uuid" content="{book_uuid}"/>
     <meta refines="#cre" property="role" scheme="marc:relators">aut</meta>
     <dc:date>{datetime.now()}</dc:date>
     <dc:language>pt-BR</dc:language>
