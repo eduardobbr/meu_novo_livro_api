@@ -6,6 +6,7 @@ from .serializers import BookSerializer, GetAllBooksSerializer
 from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
 from weasyprint import HTML, CSS
+from weasyprint.text.fonts import FontConfiguration
 from django.http import HttpResponse
 from .style import css_style, stylesheet, page_style, nav_style
 from .style import title_page_style
@@ -324,6 +325,8 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         with open(f'{book_path}/nav.xhtml', 'w') as f:
             f.write(nav_text)
 
+        shutil.copytree('bookGen/Fonts', f'{book_path}/Fonts')
+
         if not os.path.exists(f'{book_path}/META-INF'):
             os.mkdir(f'{book_path}/META-INF')
 
@@ -372,6 +375,51 @@ class ConvertDownloadBookView(generics.CreateAPIView):
     <item id="nav_styles.css" href="nav_styles.css" media-type="text/css"/>
     <item id="title_page_style.css" href="title_page_style.css" media-type="text/css"/>
     <item id="nav.xhtml" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+    <item id="Bitter-Regular.ttf" href="Fonts/Bitter-Regular.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-Bold.ttf" href="Fonts/Bitter-Bold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-Italic.ttf" href="Fonts/Bitter-Italic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-BoldItalic.ttf" href="Fonts/Bitter-BoldItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-Light.ttf" href="Fonts/Bitter-Light.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-LightItalic.ttf" href="Fonts/Bitter-LightItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-Medium.ttf" href="Fonts/Bitter-Medium.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-MediumItalic.ttf" href="Fonts/Bitter-MediumItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-SemiBold.ttf" href="Fonts/Bitter-SemiBold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-SemiBoldItalic.ttf" href="Fonts/Bitter-SemiBoldItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-ExtraBold.ttf" href="Fonts/Bitter-ExtraBold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-ExtraBoldItalic.ttf" href="Fonts/Bitter-ExtraBoldItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-Black.ttf" href="Fonts/Bitter-Black.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-BlackItalic.ttf" href="Fonts/Bitter-BlackItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-ExtraLight.ttf" href="Fonts/Bitter-ExtraLight.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-ExtraLightItalic.ttf" href="Fonts/Bitter-ExtraLightItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-Thin.ttf" href="Fonts/Bitter-Thin.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-ThinItalic.ttf" href="Fonts/Bitter-ThinItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Regular.ttf" href="Fonts/WorkSans-Regular.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Bold.ttf" href="Fonts/WorkSans-Bold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Italic.ttf" href="Fonts/WorkSans-Italic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-BoldItalic.ttf" href="Fonts/WorkSans-BoldItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Light.ttf" href="Fonts/WorkSans-Light.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-LightItalic.ttf" href="Fonts/WorkSans-LightItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Medium.ttf" href="Fonts/WorkSans-Medium.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-MediumItalic.ttf" href="Fonts/WorkSans-MediumItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-SemiBold.ttf" href="Fonts/WorkSans-SemiBold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-SemiBoldItalic.ttf" href="Fonts/WorkSans-SemiBoldItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-ExtraBold.ttf" href="Fonts/WorkSans-ExtraBold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-ExtraBoldItalic.ttf" href="Fonts/WorkSans-ExtraBoldItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-ExtraLight.ttf" href="Fonts/WorkSans-ExtraLight.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-ExtraLightItalic.ttf" href="Fonts/WorkSans-ExtraLightItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Thin.ttf" href="Fonts/WorkSans-Thin.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-ThinItalic.ttf" href="Fonts/WorkSans-ThinItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Black.ttf" href="Fonts/WorkSans-Black.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-BlackItalic.ttf" href="Fonts/WorkSans-BlackItalic.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="DancingScript-Regular.ttf" href="Fonts/DancingScript-Regular.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="DancingScript-Bold.ttf" href="Fonts/DancingScript-Bold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="DancingScript-Medium.ttf" href="Fonts/DancingScript-Medium.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="DancingScript-SemiBold.ttf" href="Fonts/DancingScript-SemiBold.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="DancingScript-VariableFont_wght.ttf" href="Fonts/DancingScript-VariableFont_wght.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-Italic-VariableFont_wght.ttf" href="Fonts/Bitter-Italic-VariableFont_wght.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="Bitter-VariableFont_wght.ttf" href="Fonts/Bitter-VariableFont_wght.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-VariableFont_wght.ttf" href="Fonts/WorkSans-VariableFont_wght.ttf" media-type="application/vnd.ms-opentype"/>
+    <item id="WorkSans-Italic-VariableFont_wght.ttf" href="Fonts/WorkSans-Italic-VariableFont_wght.ttf" media-type="application/vnd.ms-opentype"/>
 </manifest>
 <spine toc="ncx">
     <itemref idref="nav.xhtml" linear="no"/>
@@ -398,6 +446,69 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         book_data = book_serializer.data
         epub = self.generate_epub(book_data)
 
+        font_config = FontConfiguration()
+
+        # Adicionando a família de fontes Bitter
+        font_config.add_font_face(
+            'Bitter',
+            ['bookGen/Fonts/Bitter-Regular.ttf',
+             'bookGen/Fonts/Bitter-Bold.ttf',
+             'bookGen/Fonts/Bitter-Italic.ttf',
+             'bookGen/Fonts/Bitter-BoldItalic.ttf',
+             'bookGen/Fonts/Bitter-Light.ttf',
+             'bookGen/Fonts/Bitter-LightItalic.ttf',
+             'bookGen/Fonts/Bitter-Medium.ttf',
+             'bookGen/Fonts/Bitter-MediumItalic.ttf',
+             'bookGen/Fonts/Bitter-SemiBold.ttf',
+             'bookGen/Fonts/Bitter-SemiBoldItalic.ttf',
+             'bookGen/Fonts/Bitter-ExtraBold.ttf',
+             'bookGen/Fonts/Bitter-ExtraBoldItalic.ttf',
+             'bookGen/Fonts/Bitter-Black.ttf',
+             'bookGen/Fonts/Bitter-BlackItalic.ttf',
+             'bookGen/Fonts/Bitter-ExtraLight.ttf',
+             'bookGen/Fonts/Bitter-ExtraLightItalic.ttf',
+             'bookGen/Fonts/Bitter-Thin.ttf',
+             'bookGen/Fonts/Bitter-ThinItalic.ttf'],
+            rule_descriptors=['Bitter']
+        )
+
+        # Adicionando a família de fontes WorkSans
+        font_config.add_font_face(
+            'WorkSans',
+            ['bookGen/Fonts/WorkSans-Regular.ttf',
+             'bookGen/Fonts/WorkSans-Bold.ttf',
+             'bookGen/Fonts/WorkSans-Italic.ttf',
+             'bookGen/Fonts/WorkSans-BoldItalic.ttf',
+             'bookGen/Fonts/WorkSans-Light.ttf',
+             'bookGen/Fonts/WorkSans-LightItalic.ttf',
+             'bookGen/Fonts/WorkSans-Medium.ttf',
+             'bookGen/Fonts/WorkSans-MediumItalic.ttf',
+             'bookGen/Fonts/WorkSans-SemiBold.ttf',
+             'bookGen/Fonts/WorkSans-SemiBoldItalic.ttf',
+             'bookGen/Fonts/WorkSans-ExtraBold.ttf',
+             'bookGen/Fonts/WorkSans-ExtraBoldItalic.ttf',
+             'bookGen/Fonts/WorkSans-ExtraLight.ttf',
+             'bookGen/Fonts/WorkSans-ExtraLightItalic.ttf',
+             'bookGen/Fonts/WorkSans-Thin.ttf',
+             'bookGen/Fonts/WorkSans-ThinItalic.ttf',
+             'bookGen/Fonts/WorkSans-Black.ttf',
+             'bookGen/Fonts/WorkSans-BlackItalic.ttf',
+             'bookGen/Fonts/WorkSans-VariableFont_wght.ttf',
+             'bookGen/Fonts/WorkSans-Italic-VariableFont_wght.ttf'],
+            preferred_family=['Work Sans']
+        )
+
+        # Adicionando a família de fontes DancingScript
+        font_config.add_font_face(
+            'DancingScript',
+            ['bookGen/Fonts/DancingScript-Regular.ttf',
+             'bookGen/Fonts/DancingScript-Bold.ttf',
+             'bookGen/Fonts/DancingScript-Medium.ttf',
+             'bookGen/Fonts/DancingScript-SemiBold.ttf',
+             'bookGen/Fonts/DancingScript-VariableFont_wght.ttf'],
+            preferred_family=['Dancing Script']
+        )
+
         shutil.rmtree(f'bookGen/{book_data['name']}')
 
         path = 'tmp'
@@ -415,7 +526,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         render_str = f'''<div><img src="http://127.0.0.1:8000/{
             book_data["cover"]}" class="cover"/> </div>{
             book_data['content']}'''
-        html_pdf = HTML(string=render_str)
+        html_pdf = HTML(string=render_str, font_config=font_config)
         css_pdf = CSS(string=css_style)
         html_pdf.write_pdf(f'{book_path}/{book_data['name']}.pdf',
                            stylesheets=[css_pdf])

@@ -1,4 +1,59 @@
-css_style = """.ql-container {
+css_style = """
+  @font-face {
+    font-family: 'Bitter';
+    src: url('Font/Bitter-Black.ttf') format('truetype'),
+         url('Font/Bitter-BlackItalic.ttf') format('truetype'),
+         url('Font/Bitter-Bold.ttf') format('truetype'),
+         url('Font/Bitter-BoldItalic.ttf') format('truetype'),
+         url('Font/Bitter-ExtraBold.ttf') format('truetype'),
+         url('Font/Bitter-ExtraBoldItalic.ttf') format('truetype'),
+         url('Font/Bitter-ExtraLight.ttf') format('truetype'),
+         url('Font/Bitter-ExtraLightItalic.ttf') format('truetype'),
+         url('Font/Bitter-Italic-VBariableFont_wght.ttf') format('truetype'),
+         url('Font/Bitter-Italic.ttf') format('truetype'),
+         url('Font/Bitter-Light.ttf') format('truetype'),
+         url('Font/Bitter-LightItalic.ttf') format('truetype'),
+         url('Font/Bitter-Medium.ttf') format('truetype'),
+         url('Font/Bitter-MediumItalic.ttf') format('truetype'),
+         url('Font/Bitter-Regular.ttf') format('truetype'),
+         url('Font/Bitter-SemiBold.ttf') format('truetype'),
+         url('Font/Bitter-SemiBoldItalic.ttf') format('truetype'),
+         url('Font/Bitter-Thin.ttf') format('truetype'),
+         url('Font/Bitter-ThinItalic.ttf') format('truetype'),
+         url('Font/Bitter-VariableFont_wght.ttf') format('truetype');
+        }
+  @font-face {
+    font-family: 'Dancing Script';
+    src: url('fonts/DancingScript-Bold.ttf') format('truetype'),
+         url('fonts/DancingScript-Medium.ttf') format('truetype'),
+         url('fonts/DancingScript-Regular.ttf') format('truetype'),
+         url('fonts/DancingScript-SemiBold.ttf') format('truetype'),
+         url('fonts/DancingScript-VariableFont_wght.ttf') format('truetype');
+        }
+  @font-face {
+    font-family: 'Work Sans';
+    src: url('fonts/WorkSans-Black.ttf') format('truetype'),
+         url('fonts/WorkSans-BlackItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Bold.ttf') format('truetype'),
+         url('fonts/WorkSans-BoldItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraBold.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraBoldItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraLight.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraLightItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Italic-VariableFont_wght.ttf') format('truetype'),
+         url('fonts/WorkSans-Italic.ttf') format('truetype'),
+         url('fonts/WorkSans-Light.ttf') format('truetype'),
+         url('fonts/WorkSans-LightItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Medium.ttf') format('truetype'),
+         url('fonts/WorkSans-MediumItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Regular.ttf') format('truetype'),
+         url('fonts/WorkSans-SemiBold.ttf') format('truetype'),
+         url('fonts/WorkSans-SemiBoldItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Thin.ttf') format('truetype'),
+         url('fonts/WorkSans-ThinItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+        }
+  .ql-container {
   box-sizing: border-box;
   font-size: 13px;
   height: 100%;
@@ -434,7 +489,62 @@ justify-content: space-between;
 align-items: center;
 }"""
 
-stylesheet = """.ql-container {
+stylesheet = """
+@font-face {
+    font-family: 'Bitter';
+    src: url('Font/Bitter-Black.ttf') format('truetype'),
+         url('Font/Bitter-BlackItalic.ttf') format('truetype'),
+         url('Font/Bitter-Bold.ttf') format('truetype'),
+         url('Font/Bitter-BoldItalic.ttf') format('truetype'),
+         url('Font/Bitter-ExtraBold.ttf') format('truetype'),
+         url('Font/Bitter-ExtraBoldItalic.ttf') format('truetype'),
+         url('Font/Bitter-ExtraLight.ttf') format('truetype'),
+         url('Font/Bitter-ExtraLightItalic.ttf') format('truetype'),
+         url('Font/Bitter-Italic-VBariableFont_wght.ttf') format('truetype'),
+         url('Font/Bitter-Italic.ttf') format('truetype'),
+         url('Font/Bitter-Light.ttf') format('truetype'),
+         url('Font/Bitter-LightItalic.ttf') format('truetype'),
+         url('Font/Bitter-Medium.ttf') format('truetype'),
+         url('Font/Bitter-MediumItalic.ttf') format('truetype'),
+         url('Font/Bitter-Regular.ttf') format('truetype'),
+         url('Font/Bitter-SemiBold.ttf') format('truetype'),
+         url('Font/Bitter-SemiBoldItalic.ttf') format('truetype'),
+         url('Font/Bitter-Thin.ttf') format('truetype'),
+         url('Font/Bitter-ThinItalic.ttf') format('truetype'),
+         url('Font/Bitter-VariableFont_wght.ttf') format('truetype');
+        }
+  @font-face {
+    font-family: 'Dancing Script';
+    src: url('fonts/DancingScript-Bold.ttf') format('truetype'),
+         url('fonts/DancingScript-Medium.ttf') format('truetype'),
+         url('fonts/DancingScript-Regular.ttf') format('truetype'),
+         url('fonts/DancingScript-SemiBold.ttf') format('truetype'),
+         url('fonts/DancingScript-VariableFont_wght.ttf') format('truetype');
+        }
+  @font-face {
+    font-family: 'Work Sans';
+    src: url('fonts/WorkSans-Black.ttf') format('truetype'),
+         url('fonts/WorkSans-BlackItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Bold.ttf') format('truetype'),
+         url('fonts/WorkSans-BoldItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraBold.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraBoldItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraLight.ttf') format('truetype'),
+         url('fonts/WorkSans-ExtraLightItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Italic-VariableFont_wght.ttf') format('truetype'),
+         url('fonts/WorkSans-Italic.ttf') format('truetype'),
+         url('fonts/WorkSans-Light.ttf') format('truetype'),
+         url('fonts/WorkSans-LightItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Medium.ttf') format('truetype'),
+         url('fonts/WorkSans-MediumItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Regular.ttf') format('truetype'),
+         url('fonts/WorkSans-SemiBold.ttf') format('truetype'),
+         url('fonts/WorkSans-SemiBoldItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-Thin.ttf') format('truetype'),
+         url('fonts/WorkSans-ThinItalic.ttf') format('truetype'),
+         url('fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+        }
+.ql-container {
   box-sizing: border-box;
   font-size: 13px;
   height: 100%;
@@ -819,6 +929,51 @@ stylesheet = """.ql-container {
 .ql-editor img {
     max-width: 100%;
 }
+
+.endNoteLine {
+  font-size: 0.7rem;
+  vertical-align: top;
+}
+
+.ql-font-serif {
+  font-family: "Bitter", serif !important;
+}
+
+.ql-font-sans {
+  font-family: "Work Sans", sans-serif !important;
+}
+
+.ql-editor .ql-font-monospace {
+  font-family: "Dancing Script", cursive !important;
+}
+
+.ql-picker-item[data-value="sans"]::before {
+  content: "Work Sans" !important;
+  font-family: "Work Sans", sans-serif !important;
+}
+.ql-picker-item[data-value="serif"]::before {
+  content: "Bitter" !important;
+  font-family: "Bitter", serif !important;
+}
+
+.ql-picker-item[data-value="monospace"]::before {
+  content: "Dancing Script" !important;
+  font-family: "Dancing Script", cursive !important;
+}
+
+.ql-picker-label[data-value="sans"]::before {
+  content: "Work Sans" !important;
+  font-family: "Work Sans", sans-serif !important;
+}
+.ql-picker-label[data-value="serif"]::before {
+  content: "Bitter" !important;
+  font-family: "Bitter", serif !important;
+}
+.ql-picker-label[data-value="monospace"]::before {
+  content: "Dancing Script" !important;
+  font-family: "Dancing Script", cursive !important;
+}
+
 
 @media print{
     h1{
