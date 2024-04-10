@@ -6,7 +6,6 @@ from .serializers import BookSerializer, GetAllBooksSerializer
 from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
 from weasyprint import HTML, CSS
-from weasyprint.text.fonts import FontConfiguration
 from django.http import HttpResponse
 from .style import css_style, stylesheet, page_style, nav_style
 from .style import title_page_style
@@ -446,69 +445,6 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         book_data = book_serializer.data
         epub = self.generate_epub(book_data)
 
-        font_config = FontConfiguration()
-
-        # Adicionando a família de fontes Bitter
-        font_config.add_font_face(
-            'Bitter',
-            ['bookGen/Fonts/Bitter-Regular.ttf',
-             'bookGen/Fonts/Bitter-Bold.ttf',
-             'bookGen/Fonts/Bitter-Italic.ttf',
-             'bookGen/Fonts/Bitter-BoldItalic.ttf',
-             'bookGen/Fonts/Bitter-Light.ttf',
-             'bookGen/Fonts/Bitter-LightItalic.ttf',
-             'bookGen/Fonts/Bitter-Medium.ttf',
-             'bookGen/Fonts/Bitter-MediumItalic.ttf',
-             'bookGen/Fonts/Bitter-SemiBold.ttf',
-             'bookGen/Fonts/Bitter-SemiBoldItalic.ttf',
-             'bookGen/Fonts/Bitter-ExtraBold.ttf',
-             'bookGen/Fonts/Bitter-ExtraBoldItalic.ttf',
-             'bookGen/Fonts/Bitter-Black.ttf',
-             'bookGen/Fonts/Bitter-BlackItalic.ttf',
-             'bookGen/Fonts/Bitter-ExtraLight.ttf',
-             'bookGen/Fonts/Bitter-ExtraLightItalic.ttf',
-             'bookGen/Fonts/Bitter-Thin.ttf',
-             'bookGen/Fonts/Bitter-ThinItalic.ttf'],
-            rule_descriptors=['Bitter']
-        )
-
-        # Adicionando a família de fontes WorkSans
-        font_config.add_font_face(
-            'WorkSans',
-            ['bookGen/Fonts/WorkSans-Regular.ttf',
-             'bookGen/Fonts/WorkSans-Bold.ttf',
-             'bookGen/Fonts/WorkSans-Italic.ttf',
-             'bookGen/Fonts/WorkSans-BoldItalic.ttf',
-             'bookGen/Fonts/WorkSans-Light.ttf',
-             'bookGen/Fonts/WorkSans-LightItalic.ttf',
-             'bookGen/Fonts/WorkSans-Medium.ttf',
-             'bookGen/Fonts/WorkSans-MediumItalic.ttf',
-             'bookGen/Fonts/WorkSans-SemiBold.ttf',
-             'bookGen/Fonts/WorkSans-SemiBoldItalic.ttf',
-             'bookGen/Fonts/WorkSans-ExtraBold.ttf',
-             'bookGen/Fonts/WorkSans-ExtraBoldItalic.ttf',
-             'bookGen/Fonts/WorkSans-ExtraLight.ttf',
-             'bookGen/Fonts/WorkSans-ExtraLightItalic.ttf',
-             'bookGen/Fonts/WorkSans-Thin.ttf',
-             'bookGen/Fonts/WorkSans-ThinItalic.ttf',
-             'bookGen/Fonts/WorkSans-Black.ttf',
-             'bookGen/Fonts/WorkSans-BlackItalic.ttf',
-             'bookGen/Fonts/WorkSans-VariableFont_wght.ttf',
-             'bookGen/Fonts/WorkSans-Italic-VariableFont_wght.ttf'],
-            preferred_family=['Work Sans']
-        )
-
-        # Adicionando a família de fontes DancingScript
-        font_config.add_font_face(
-            'DancingScript',
-            ['bookGen/Fonts/DancingScript-Regular.ttf',
-             'bookGen/Fonts/DancingScript-Bold.ttf',
-             'bookGen/Fonts/DancingScript-Medium.ttf',
-             'bookGen/Fonts/DancingScript-SemiBold.ttf',
-             'bookGen/Fonts/DancingScript-VariableFont_wght.ttf'],
-            preferred_family=['Dancing Script']
-        )
-
         shutil.rmtree(f'bookGen/{book_data['name']}')
 
         path = 'tmp'
@@ -526,7 +462,7 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         render_str = f'''<div><img src="http://127.0.0.1:8000/{
             book_data["cover"]}" class="cover"/> </div>{
             book_data['content']}'''
-        html_pdf = HTML(string=render_str, font_config=font_config)
+        html_pdf = HTML(string=render_str)
         css_pdf = CSS(string=css_style)
         html_pdf.write_pdf(f'{book_path}/{book_data['name']}.pdf',
                            stylesheets=[css_pdf])
