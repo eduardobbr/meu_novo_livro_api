@@ -1,2 +1,1 @@
-source venv/bin/activate
-python manage.py runserver
+web: gunicorn -w 4 -b 0.0.0.0:$PORT -k gevent main:app
