@@ -1,1 +1,0 @@
-web: gunicorn -w 4 -b 0.0.0.0:process.env.PORT -k gevent main:app
