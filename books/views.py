@@ -5,7 +5,7 @@ from books.models import Book
 from .serializers import BookSerializer, GetAllBooksSerializer
 from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
-from weasyprint import HTML, CSS
+import pdfkit
 from django.http import HttpResponse
 from .style import css_style, stylesheet, page_style, nav_style
 from .style import title_page_style
@@ -462,10 +462,10 @@ class ConvertDownloadBookView(generics.CreateAPIView):
         render_str = f'''<div><img src="http://127.0.0.1:8000/{
             book_data["cover"]}" class="cover"/> </div>{
             book_data['content']}'''
-        html_pdf = HTML(string=render_str)
-        css_pdf = CSS(string=css_style)
-        html_pdf.write_pdf(f'{book_path}/{book_data['name']}.pdf',
-                           stylesheets=[css_pdf])
+
+        pdfkit.from_string(
+            render_str, f'{book_path}/{book_data['name']}.pdf',
+            css='books/style.css')
 
         zip = shutil.make_archive(f'{book_path}', 'zip', f'{book_path}')
 
