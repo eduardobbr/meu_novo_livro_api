@@ -169,6 +169,49 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',)
 }
 
+ALLOWED_HOSTS = [
+    'example.us',
+    'www.example.us',
+    'example-us.vercel.app',
+    'localhost',
+    '*'
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_REPLACE_HTTPS_REFERER = True
+CSRF_TRUSTED_ORIGINS = [
+    'https://localhost',
+    'https://example-us.vercel.app',
+    'https://example.us',
+    'https://www.example.us',
+    'https://www.example.us:40001',
+    'https://example.us:40001',
+    'https://0.0.0.0:40001',
+]
+CORS_ALLOW_HEADERS = ["accept", "referer", "accept-encoding", "authorization", "content-type",
+                      "dnt", "origin", "user-agent", "x-csrftoken", "x-sessionid", "x-requested-with"]
+CORS_EXPOSE_HEADERS = ['Set-Cookie']
+
+CORS_ALLOWED_HOSTS = [
+    'example.us',
+    'www.example.us',
+    'example-us.vercel.app',
+    'localhost'
+]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    'https://localhost',
+    'https://example-us.vercel.app',
+    'https://example.us',
+    'https://www.example.us',
+    'https://www.example.us:40001',
+    'https://example.us:40001',
+    'https://0.0.0.0:40001',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'localhost',
+    'www.example.us',
+    'example.us'
 ]

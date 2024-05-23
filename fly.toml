@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for meu-novo-livro-cold-waterfall-1813 on 2024-04-12T13:05:26-03:00
+# fly.toml app configuration file generated for meu-novo-livro-lively-waterfall-4698 on 2024-05-22T14:26:23-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'meu-novo-livro-cold-waterfall-1813'
+app = 'meu-novo-livro-lively-waterfall-4698'
 primary_region = 'gru'
 console_command = '/code/manage.py shell'
 
