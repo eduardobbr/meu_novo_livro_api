@@ -20,6 +20,8 @@ ENV SECRET_KEY "yNNAgmpkZjNyQHXGMFzl2iBVqjl3U8fMgnfJQqV5VB6Uipa2a0"
 RUN python manage.py collectstatic --noinput
 RUN python manage.py makemigrations
 RUN python manage.py migrate
+RUN apt-get update && apt-get install -y wkhtmltopdf 
+
 
 EXPOSE 8000
 
