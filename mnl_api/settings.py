@@ -173,6 +173,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://meu-novo-livro-lively-waterfall-4698.fly.dev',
     'https://localhost:3000',
     'http://localhost:3000',
+    'https://mnlstage.thapcom.com.br'
 ]
 
 ALLOWED_HOSTS = [
