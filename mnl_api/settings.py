@@ -177,5 +177,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 ALLOWED_HOSTS = [
-    'meu-novo-livro-lively-waterfall-4698.fly.dev'
+    'meu-novo-livro-lively-waterfall-4698.fly.dev',
+    '127.0.0.1',
 ]

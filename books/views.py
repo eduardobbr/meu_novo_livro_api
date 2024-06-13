@@ -7,7 +7,7 @@ from .serializers import GetOneBookSerializer
 from .permissions import IsOwner
 import pdfkit
 from django.http import HttpResponse
-from .style import css_style, stylesheet, page_style, nav_style
+from .style import stylesheet, page_style, nav_style
 from .style import title_page_style
 import os
 from pathlib import Path
@@ -22,16 +22,20 @@ class BookView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        user = request.query_params.get('user')
 
-        if (user):
-            books = Book.objects.filter(user=user)
+        try:
+            user = request.query_params.get('user')
+
+            if (user):
+                books = Book.objects.filter(user=user)
+                book_serializer = GetAllBooksSerializer(books, many=True)
+                return Response(book_serializer.data, 200)
+
+            books = Book.objects.all()
             book_serializer = GetAllBooksSerializer(books, many=True)
             return Response(book_serializer.data, 200)
-
-        books = Book.objects.all()
-        book_serializer = GetAllBooksSerializer(books, many=True)
-        return Response(book_serializer.data, 200)
+        except Exception as e:
+            return Response(e, 400)
 
 
 class CreateBookView(generics.CreateAPIView):
@@ -129,11 +133,15 @@ class OneBookAuthView(generics.CreateAPIView):
         return Response(book_serializer.errors, 400)
 
     def delete(self, request, *args, **kwargs):
-        id = kwargs['id']
-        book = self.get_object(id, request)
-        book.delete()
+        try:
+            id = kwargs['id']
+            book = self.get_object(id, request)
+            book.delete()
 
-        return Response(204)
+            return Response(status=204)
+
+        except Exception as e:
+            return Response(e, 400)
 
 
 class ConvertDownloadBookView(generics.CreateAPIView):
