@@ -40,26 +40,26 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'corsheaders',  # <- Aqui OK
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'corsheaders',
     'books',
     'users',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # <- DEVE vir aqui!
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
+
 
 ROOT_URLCONF = 'mnl_api.urls'
 
@@ -170,13 +170,13 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'https://meu-novo-livro-lively-waterfall-4698.fly.dev',
-    'https://localhost:3000',
-    'http://localhost:3000',
-    'https://mnlstage.thapcom.com.br'
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
+
 
 ALLOWED_HOSTS = [
     'meu-novo-livro-lively-waterfall-4698.fly.dev',
     '127.0.0.1',
+    'localhost',
 ]
